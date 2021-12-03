@@ -11,10 +11,10 @@ service cloud.firestore {
     // chat sessions
     match /sessions/{sessionId} {
 			allow read: if request.auth != null;
-      // TODO: && request.resource.data.keys().hasOnly(['nextSessionId'])
-      // I'm getting a weird issue where the transaction is sending an update instead of
-      // a create. Or at least that's what the error is making it seem like
-      allow update: if request.auth != null;
+      allow update: if (
+        request.auth != null &&
+        request.auth.uid in resource.data.userIds
+      );
       allow create: if request.auth != null;
       allow delete: if false;
     }
