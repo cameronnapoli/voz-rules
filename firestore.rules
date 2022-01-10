@@ -7,6 +7,12 @@ service cloud.firestore {
       allow update: if request.auth != null && request.auth.uid == userId;
       allow create, delete: if false;
     }
+
+    // user private data
+    match /userSecrets/{userId} {
+      allow create, read, update: if request.auth.uid != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
     
     // chat sessions
     match /sessions/{sessionId} {
